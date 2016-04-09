@@ -37,7 +37,34 @@ public class WebIntent extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
         try {
 
-            if (action.equals("startActivity")) {
+            if (action.equals("startActivityForResult")) {
+                if (args.length() != 1) {
+                    //return new PluginResult(PluginResult.Status.INVALID_ACTION);
+                    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION));
+                    return false;
+                }
+
+                // Parse the arguments
+                final CordovaResourceApi resourceApi = webView.getResourceApi();
+                JSONObject obj = args.getJSONObject(0);
+                String type = obj.has("type") ? obj.getString("type") : null;
+                Uri uri = obj.has("url") ? resourceApi.remapUri(Uri.parse(obj.getString("url"))) : null;
+                JSONObject extras = obj.has("extras") ? obj.getJSONObject("extras") : null;
+                Map<String, String> extrasMap = new HashMap<String, String>();
+
+                // Populate the extras if any exist
+                if (extras != null) {
+                    JSONArray extraNames = extras.names();
+                    for (int i = 0; i < extraNames.length(); i++) {
+                        String key = extraNames.getString(i);
+                        String value = extras.getString(key);
+                        extrasMap.put(key, value);
+                    }
+                }
+
+                return startActivity(obj.getString("action"), uri, type, extrasMap);
+
+            }else if (action.equals("startActivity")) {
                 if (args.length() != 1) {
                     //return new PluginResult(PluginResult.Status.INVALID_ACTION);
                     callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION));
@@ -235,5 +262,61 @@ public class WebIntent extends CordovaPlugin {
         }
 
         ((CordovaActivity)this.cordova.getActivity()).sendBroadcast(intent);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
+
+        // Check which request we're responding to
+        if (requestCode == REQUEST_CODE) {
+            // Make sure the request was successful
+            if (resultCode == Activity.RESULT_OK) {
+                // The user picked a contact.
+                // The Intent's data Uri identifies which contact was selected.
+                Intent i = this.cordova.getActivity().getIntent();
+
+                String r = i.getStringExtra(extraName);
+                if (null == r) {
+                    r = i.getParcelableExtra(extraName).toString();
+                }
+                pluginResult = new PluginResult(PluginResult.Status.OK, r);
+
+            }
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            this.callbackContext.error("User cancel");
+        }// If something else
+        else {
+            this.callbackContext.error("Something wrong");
+        }
+
+        pluginResult.setKeepCallback(true);
+        callbackContext.sendPluginResult(pluginResult);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
+
+        // Check which request we're responding to
+        if (requestCode == REQUEST_CODE) {
+
+            if (resultCode == Activity.RESULT_OK) {
+                String r = intent.getDataString();
+                if (null == r) {
+                    pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
+                } else {
+                    pluginResult = new PluginResult(PluginResult.Status.OK, r);
+                }
+                this.callbackContext.success(r);
+            }
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            this.callbackContext.error("User cancel");
+        }// If something else
+        else {
+            this.callbackContext.error("Something wrong");
+        }
+        pluginResult.setKeepCallback(true);
+        this.callbackContext.sendPluginResult(pluginResult);
     }
 }
