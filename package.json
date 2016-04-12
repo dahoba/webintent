@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/okwei2000/webintent.git"
+    "url": "git+https://github.com/dahoba/webintent.git"
   },
   "keywords": [
     "Custom URL Scheme",
@@ -34,12 +34,12 @@
       "version": ">=3.0.0"
     }
   ],
-  "author": "Kevin Wei",
+  "author": "Siritas S",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/okwei2000/webintent/issues"
+    "url": "https://github.com/dahoba/webintent/issues"
   },
-  "homepage": "https://github.com/okwei2000/webintent#readme",
+  "homepage": "https://github.com/dahoba/webintent#readme",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

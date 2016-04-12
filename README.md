@@ -1,6 +1,32 @@
 # WebIntent Android Plugin for Cordova 3.X #
 By Boris Smus
 
+This version modified by dahoba
+
+Add features `startActivityForResult`.
+
+I just need a path of a file from another app which if I use HTML5's form upload it will give
+me only a file object without its path. So this is it, use Intent.
+
+### startActivityForResult ###
+Use action `android.intent.action.GET_CONTENT`
+then after select file from another app we will get the URI.
+
+```
+ window.plugins.webintent.startActivity({
+      action: 'android.intent.action.GET_CONTENT',
+      type: '*/*'
+    },
+      (uri) => {
+        /* success */
+      },
+      function(err)
+        console.log("Failed ", err);
+      }
+```
+
+------
+
 EXTRA_STREAM for onNewIntent() works in this version
 
 Phonegap/Cordova 2.X version available at the [WebIntent](https://github.com/phonegap/phonegap-plugins/tree/master/Android/WebIntent) plugin site.
@@ -8,7 +34,12 @@ Phonegap/Cordova 2.X version available at the [WebIntent](https://github.com/pho
 ## Adding the Plugin to your project ##
 1. To install the plugin, use the Cordova CLI and enter the following:
 
-`cordova plugin add https://github.com/florentvaldelievre/virtualartifacts-webIntent.git`
+`cordova plugin add https://github.com/dahoba/webintent.git`
+
+or
+
+`ionic plugin add https://github.com/dahoba/webintent.git`
+
 
 2. Confirm that the following is in your `res/xml/config.xml` file:
 
