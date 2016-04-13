@@ -5,10 +5,7 @@
   "cordova": {
     "id": "cordova-plugin-webintent2",
     "platforms": [
-      "ios",
-      "android",
-      "windows8",
-      "windows"
+      "android"
     ]
   },
   "repository": {
@@ -23,10 +20,7 @@
     "Launch My App",
     "Launch App",
     "ecosystem:cordova",
-    "cordova-ios",
-    "cordova-android",
-    "cordova-windows",
-    "cordova-windows8"
+    "cordova-android"
   ],
   "engines": [
     {
